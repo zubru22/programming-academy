@@ -1,13 +1,33 @@
 #include <string.h>
-#include <stdbool.h>
 #include <assert.h>
-
+#include <stdbool.h>
+#include <ctype.h>
 /**
 * Function checks if a string has the same amount of 'x' and 'o's. Function must be case insensitive.
 */
 bool XO(const char *word, const int length)
 {
-	return false;
+	int i;
+	int x_amount = 0;
+	int o_amount = 0;
+	bool equal;
+	
+	// Iterate over the word and count 'x's and 'o's
+	for (i = 0; i < length; i++)
+	{
+		if (tolower(word[i]) == 'x')
+			x_amount++;
+		if (tolower(word[i]) == 'o')
+			o_amount++;
+	}
+	
+	// If amount of 'x's and 'o's are equal assign true value to equal flag
+	if (x_amount == o_amount)
+		equal = true;
+	else
+		equal = false;
+	
+	return equal;
 }
 
 void test_cases()
