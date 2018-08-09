@@ -44,6 +44,7 @@ int form_the_largest_number(int number)
 
 	// Convert string to integer
 	largest = atoi(number_str);
+	free(number_str);
 	
 	return largest;
 }
