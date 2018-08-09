@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
 #define ARR_LEN 5
 #define MAX_NUM 49
 #define MIN_NUM 1
