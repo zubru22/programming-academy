@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include <stdio.h>
 /** 
 * Function returns true if word_1 and word_2 are anagrams to each other. Otherwise false.
 * Case sensitivity doesn't matter.
