@@ -26,8 +26,6 @@ int* Lotto_drawing()
 	
 	// Allocate memory for array with ARR_LEN length
 	random_numbers = (int *) calloc(ARR_LEN, sizeof(int));
-	// Random seed for generating random numbers
-	srand(time(NULL));
 	
 	// Generate random numbers and insert them into array
 	for (int i = 0; i < ARR_LEN; i++)
@@ -108,6 +106,9 @@ void test_cases()
 
 int main()
 {
+	// Random seed for generating random numbers
+	srand(time(NULL));
+	
 	test_cases();
 	return 0;
 }
