@@ -686,22 +686,51 @@ class PokerGame
 			using std::cout;
 			using std::endl;
 
-			Card winningHand[5];
+			// Best cards for each of players
+			Card playerBestHand[5];
+			// Fetch best cards from the table
 			for (int i = 0; i < 3; i++)
-				winningHand[i] = tableCards[bestHand[winner][i]];
-
+				playerBestHand[i] = tableCards[bestHand[winner][i]];
+			// Fetch cards from the winner's hand
 			for (int i = 0; i < 2; i++)
-				winningHand[i + 3] = players[winner].cards[i];
+				playerBestHand[i + 3] = players[winner].cards[i];
 
-			qsort(winningHand, 5, sizeof(Card), compareCards);
+			// Sort them and print them
+			qsort(playerBestHand, 5, sizeof(Card), compareCards);
 
 			cout << "   The winning hand:" << endl;
 			cout << "   ___   ___   ___   ___   ___" << endl;
-			cout << "  | " << ranks[winningHand[0].rank] << " | | " << ranks[winningHand[1].rank] << " | | " << ranks[winningHand[2].rank] << " | | " << ranks[winningHand[3].rank] << " | | " << ranks[winningHand[4].rank] << " |" << endl;
-			cout << "  | " << suits[winningHand[0].suit] << " | | " << suits[winningHand[1].suit] << " | | " << suits[winningHand[2].suit] << " | | " << suits[winningHand[3].suit] << " | | " << suits[winningHand[4].suit] << " |" << endl;
+			cout << "  | " << ranks[playerBestHand[0].rank] << " | | " << ranks[playerBestHand[1].rank] << " | | " << ranks[playerBestHand[2].rank] << " | | " << ranks[playerBestHand[3].rank] << " | | " << ranks[playerBestHand[4].rank] << " |" << endl;
+			cout << "  | " << suits[playerBestHand[0].suit] << " | | " << suits[playerBestHand[1].suit] << " | | " << suits[playerBestHand[2].suit] << " | | " << suits[playerBestHand[3].suit] << " | | " << suits[playerBestHand[4].suit] << " |" << endl;
 			cout << "  |___| |___| |___| |___| |___|" << endl;
 			cout << endl << endl;
 			_sleep(3);
+			
+			// Print best cards combination for players who were still in the round
+			for (int i = 0; i < players_count; i++)
+			{
+				// Skip printing winner's hand and players who flopped
+				if (i != winner && players[i].round != 0)
+				{
+					// Fetch best cards 3 from the table
+					for (int j = 0; j < 3; j++)
+						playerBestHand[j] = tableCards[bestHand[i][j]];
+					// Fetch cards from the other players' hand
+					for (int j = 0; j < 2; j++)
+						playerBestHand[j + 3] = players[i].cards[j];
+
+					// Sort them and print them
+					qsort(playerBestHand, 5, sizeof(Card), compareCards);
+					
+					cout << "    " << players[i].name << " hand:" << endl;
+					cout << "   ___   ___   ___   ___   ___" << endl;
+					cout << "  | " << ranks[playerBestHand[0].rank] << " | | " << ranks[playerBestHand[1].rank] << " | | " << ranks[playerBestHand[2].rank] << " | | " << ranks[playerBestHand[3].rank] << " | | " << ranks[playerBestHand[4].rank] << " |" << endl;
+					cout << "  | " << suits[playerBestHand[0].suit] << " | | " << suits[playerBestHand[1].suit] << " | | " << suits[playerBestHand[2].suit] << " | | " << suits[playerBestHand[3].suit] << " | | " << suits[playerBestHand[4].suit] << " |" << endl;
+					cout << "  |___| |___| |___| |___| |___|" << endl;
+					cout << endl << endl;
+					_sleep(3);
+				}
+			}
 		}
 
 		/* main gameplay function*/
