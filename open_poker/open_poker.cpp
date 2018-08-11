@@ -303,27 +303,60 @@ class PokerGame
 				/* human player actions */
 				if (k % players_count == 4 && players[4].round)
 				{
+					// If other player already put a bet on the table check if player can call in
 					if (betOn)
 					{
-						cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
-						cin >> action;
-						while (action != FLOP && action != BET_or_CALL)
+						// Player has money and it's more or equal to current bet on the table
+						if (players[4].money != 0 && players[4].money >= betOn)
 						{
-							cout << "Invalid number pressed." << endl;
 							cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
 							cin >> action;
+							while (action != FLOP && action != BET_or_CALL)
+							{
+								cout << "Invalid number pressed." << endl;
+								cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
+								cin >> action;
+							}
 						}
+						// Else player can only pass
+						else
+						{
+							cout << "\t\t\t\t\tYour action: (1) FLOP ";
+							cin >> action;
+							while (action != FLOP)
+							{
+								cout << "Invalid number pressed." << endl;
+								cout << "\t\t\t\t\tYour action: (1) FLOP";
+								cin >> action;
+							}
+						}
+						
 					}
+					// Else player can bet, check or flop.
 					else
 					{
-						cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET/CALL ";
-						cin >> action;
-						// Action is outside 1 - 3 range
-						while (action < FLOP || action > BET_or_CALL)
+						if (players[4].money > 0)
 						{
-							cout << "Invalid number pressed." << endl;
 							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET/CALL ";
 							cin >> action;
+							// Action is outside 1 - 3 range
+							while (action < FLOP || action > BET_or_CALL)
+							{
+								cout << "Invalid number pressed." << endl;
+								cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET/CALL ";
+								cin >> action;
+							}
+						}
+						else
+						{
+							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK";
+							cin >> action;
+							while (action != FLOP && action != CHECK)
+							{
+								cout << "Invalid number pressed." << endl;
+								cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK";
+								cin >> action;
+							}
 						}
 					}
 
@@ -346,7 +379,7 @@ class PokerGame
 							pot += betOn;
 							players[4].money -= betOn;
 							players[4].goodToGo = 1;
-							cout << "\t+ " << players[4].name << " bets " << betOn << "$\n";
+							cout << "\t+ " << players[4].name << " calls " << betOn << "$\n";
 						}
 						else
 						{
