@@ -309,12 +309,12 @@ class PokerGame
 						// Player has money and it's more or equal to current bet on the table
 						if (players[4].money != 0 && players[4].money >= betOn)
 						{
-							cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
+							cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 							cin >> action;
 							while (action != FLOP && action != BET_or_CALL)
 							{
 								cout << "Invalid number pressed." << endl;
-								cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
+								cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 								cin >> action;
 							}
 						}
@@ -326,7 +326,7 @@ class PokerGame
 							while (action != FLOP)
 							{
 								cout << "Invalid number pressed." << endl;
-								cout << "\t\t\t\t\tYour action: (1) FLOP";
+								cout << "\t\t\t\t\tYour action: (1) FLOP ";
 								cin >> action;
 							}
 						}
@@ -337,13 +337,13 @@ class PokerGame
 					{
 						if (players[4].money > 0)
 						{
-							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET/CALL ";
+							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET ";
 							cin >> action;
 							// Action is outside 1 - 3 range
 							while (action < FLOP || action > BET_or_CALL)
 							{
 								cout << "Invalid number pressed." << endl;
-								cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET/CALL ";
+								cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET ";
 								cin >> action;
 							}
 						}
@@ -379,7 +379,7 @@ class PokerGame
 							pot += betOn;
 							players[4].money -= betOn;
 							players[4].goodToGo = 1;
-							cout << "\t+ " << players[4].name << " calls " << betOn << "$\n";
+							cout << "\t++ " << players[4].name << " calls!" << endl;
 						}
 						else
 						{
@@ -722,7 +722,7 @@ class PokerGame
 					// Sort them and print them
 					qsort(playerBestHand, 5, sizeof(Card), compareCards);
 					
-					cout << "    " << players[i].name << " hand:" << endl;
+					cout << "    " << players[i].name << "'s hand:" << endl;
 					cout << "   ___   ___   ___   ___   ___" << endl;
 					cout << "  | " << ranks[playerBestHand[0].rank] << " | | " << ranks[playerBestHand[1].rank] << " | | " << ranks[playerBestHand[2].rank] << " | | " << ranks[playerBestHand[3].rank] << " | | " << ranks[playerBestHand[4].rank] << " |" << endl;
 					cout << "  | " << suits[playerBestHand[0].suit] << " | | " << suits[playerBestHand[1].suit] << " | | " << suits[playerBestHand[2].suit] << " | | " << suits[playerBestHand[3].suit] << " | | " << suits[playerBestHand[4].suit] << " |" << endl;
