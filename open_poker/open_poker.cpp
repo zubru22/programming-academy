@@ -413,11 +413,25 @@ class PokerGame
 					rational = rand() % 2;
 					if (rational)
 					{
-						action = computerAction(k % players_count);
+						cout << players[k % players_count].name << " is rational" << endl;
+						action = computerAction(k % players_count) + 1;
+						while (players[k % players_count].money < betOn && action != FLOP)
+						{
+							action = (rand() % 3) + 1;
+							cout << players[k % players_count].name << "'s action: " << action << endl;
+						}
+						cout << players[k % players_count].name << "'s action: " << action << endl;
+						
 					}
 					else
 					{
+						cout << players[k % players_count].name << " is not rational" << endl;
 						action = (rand() % 3) + 1;
+						while (players[k % players_count].money < betOn && action != FLOP)
+						{
+							action = (rand() % 3) + 1;
+							//cout << players[k % players_count].name << "'s action: " << action << endl;
+						}
 					}
 					if (action == FLOP)
 					{
@@ -457,6 +471,7 @@ class PokerGame
 			{
 				for (int k = bind + 1; k < bind + 7; k++)
 				{
+					// Player's action
 					if (k % players_count == player_index)
 					{
 						if (players[player_index].round && players[player_index].goodToGo == 0)
@@ -485,6 +500,7 @@ class PokerGame
 									cin >> action;
 								}
 							}
+							// Handle player's action
 							if (action == FLOP)
 							{
 								cout << "\t- " << players[player_index].name << " flops...\n";
@@ -500,13 +516,22 @@ class PokerGame
 							}
 						}
 					}
-
+					
+					// Computer's action
 					else
 					{
 						if (players[k % players_count].round == 0 || players[k % players_count].goodToGo == 1)
 							continue;
-						action = rand() % 2;
-						if (action == 0)
+						// Action range 1-3: FLOP = 1, CHECK = 2, CALL = 3
+						action = (rand() % 3) + 1;
+						cout << players[k % players_count].name << "'s action: " << action << endl;
+						// Do not let computer to CHECK or bet if it doesn't have enough of money
+						while (action == CHECK || players[k % players_count].money < betOn)
+						{
+							action = (rand() % 3) + 1;
+							//cout << players[k % players_count].name << "'s action: " << action << endl;
+						}
+						if (action == FLOP)
 						{
 							players[k % players_count].round = 0;
 							cout << "\t- " << players[k % players_count].name << " flops..." << endl;
