@@ -17,6 +17,8 @@
 const int suits_count = 4;
 const int ranks_count = 13;
 const int sleep_time = 1;
+// Player index
+const int player_index = 4;
 
 std::string suits[suits_count];
 std::string ranks[ranks_count];
@@ -155,7 +157,7 @@ class PokerGame
 			players[1].name = "Tristan";
 			players[2].name = "Michal";
 			players[3].name = "Edyta";
-			players[4].name = name;
+			players[player_index].name = name;
 			players[5].name = "Kamil";
 
 			startGame();
@@ -218,17 +220,17 @@ class PokerGame
 			cout << "   \\                               /" << endl;
 			cout << "    \\_" << ((bind == 5) ? "@" : "_") << "_____________" << ((bind == 4) ? "@" : "_") << "___________" << ((bind == 3) ? "@" : "_") << "_/" << endl;
 			cout << endl;
-			cout << "  " << ((players[5].playing) ? (players[5].name) : "      ") << "          " << ((players[4].playing) ? (players[4].name) : "      ") << "         "
+			cout << "  " << ((players[5].playing) ? (players[5].name) : "      ") << "          " << ((players[player_index].playing) ? (players[player_index].name) : "      ") << "         "
 				<< ((players[3].playing) ? (players[3].name) : "    ") << endl;
-			cout << "   $" << setw(4) << ((players[5].playing) ? (players[5].money) : 0) << "          $" << setw(4) << ((players[4].playing) ? (players[4].money) : 0)
+			cout << "   $" << setw(4) << ((players[5].playing) ? (players[5].money) : 0) << "          $" << setw(4) << ((players[player_index].playing) ? (players[player_index].money) : 0)
 				<< "         $" << setw(4) << ((players[3].playing) ? (players[3].money) : 0) << endl;
 			cout << endl;
-			if (players[4].round)
+			if (players[player_index].round)
 			{
 				cout << "   Your hand:" << endl;
 				cout << "    ___    ___" << endl;
-				cout << "   | " << ranks[players[4].cards[0].rank] << " |  | " << ranks[players[4].cards[1].rank] << " |" << endl;
-				cout << "   | " << suits[players[4].cards[0].suit] << " |  | " << suits[players[4].cards[1].suit] << " |" << endl;
+				cout << "   | " << ranks[players[player_index].cards[0].rank] << " |  | " << ranks[players[player_index].cards[1].rank] << " |" << endl;
+				cout << "   | " << suits[players[player_index].cards[0].suit] << " |  | " << suits[players[player_index].cards[1].suit] << " |" << endl;
 				cout << "   |___|  |___|" << endl << endl;
 			}
 
@@ -301,13 +303,13 @@ class PokerGame
 			for (int k = bind + 1; k < bind + 7; k++)
 			{
 				/* human player actions */
-				if (k % players_count == 4 && players[4].round)
+				if (k % players_count == player_index && players[player_index].round)
 				{
 					// If other player already put a bet on the table check if player can call in
 					if (betOn)
 					{
 						// Player has money and it's more or equal to current bet on the table
-						if (players[4].money != 0 && players[4].money >= betOn)
+						if (players[player_index].money != 0 && players[player_index].money >= betOn)
 						{
 							cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 							cin >> action;
@@ -335,7 +337,7 @@ class PokerGame
 					// Else player can bet, check or flop.
 					else
 					{
-						if (players[4].money > 0)
+						if (players[player_index].money > 0)
 						{
 							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK (3) BET ";
 							cin >> action;
@@ -364,12 +366,12 @@ class PokerGame
 
 					if (action == FLOP)
 					{
-						players[4].round = 0;
-						cout << "\t- " << players[4].name << " flops...\n";
+						players[player_index].round = 0;
+						cout << "\t- " << players[player_index].name << " flops...\n";
 					}
 					else if (action == CHECK)
 					{
-						cout << "\t+ " << players[4].name << " checks.\n";
+						cout << "\t+ " << players[player_index].name << " checks.\n";
 						continue;
 					}
 					else
@@ -377,15 +379,15 @@ class PokerGame
 						if (betOn)
 						{
 							pot += betOn;
-							players[4].money -= betOn;
-							players[4].goodToGo = 1;
-							cout << "\t++ " << players[4].name << " calls!" << endl;
+							players[player_index].money -= betOn;
+							players[player_index].goodToGo = 1;
+							cout << "\t++ " << players[player_index].name << " calls!" << endl;
 						}
 						else
 						{
 							cout << "How much do you want to bet: ";
 							cin >> bet;
-							while (bet > players[4].money || bet < 1)
+							while (bet > players[player_index].money || bet < 1)
 							{
 								cout << "Invalid number to bet." << endl;
 								cout << "How much do you want to bet: ";
@@ -393,11 +395,11 @@ class PokerGame
 								cout << endl << endl;
 							}
 							pot += bet;
-							players[4].money -= bet;
+							players[player_index].money -= bet;
 							betOn = bet;
-							players[4].goodToGo = 1;
+							players[player_index].goodToGo = 1;
 
-							cout << "\t+ " << players[4].name << " bets " << bet << "$\n";
+							cout << "\t+ " << players[player_index].name << " bets " << bet << "$\n";
 						}
 					}
 				}
@@ -455,9 +457,9 @@ class PokerGame
 			{
 				for (int k = bind + 1; k < bind + 7; k++)
 				{
-					if (k % players_count == 4)
+					if (k % players_count == player_index)
 					{
-						if (players[4].round && players[4].goodToGo == 0)
+						if (players[player_index].round && players[player_index].goodToGo == 0)
 						{
 							cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
 							cin >> action;
@@ -470,16 +472,16 @@ class PokerGame
 							}
 							if (action == FLOP)
 							{
-								cout << "\t- " << players[4].name << " flops...\n";
-								players[4].round = 0;
+								cout << "\t- " << players[player_index].name << " flops...\n";
+								players[player_index].round = 0;
 							}
 							else
 							{
 								pot += betOn;
-								players[4].money -= betOn;
-								players[4].goodToGo = 1;
+								players[player_index].money -= betOn;
+								players[player_index].goodToGo = 1;
 
-								cout << "\t+ " << players[4].name << " bets " << betOn << "$\n";
+								cout << "\t+ " << players[player_index].name << " bets " << betOn << "$\n";
 							}
 						}
 					}
@@ -762,7 +764,7 @@ class PokerGame
 				}
 
 				/* checking for game over*/
-				if (players[4].playing == 0)
+				if (players[player_index].playing == 0)
 				{
 					std::cout << "You are out of money, sorry." << std::endl;
 					std::cout << "Game over." << std::endl;
