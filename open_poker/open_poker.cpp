@@ -351,12 +351,12 @@ class PokerGame
 						}
 						else
 						{
-							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK";
+							cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK ";
 							cin >> action;
 							while (action != FLOP && action != CHECK)
 							{
 								cout << "Invalid number pressed." << endl;
-								cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK";
+								cout << "\t\t\t\t\tYour action: (1) FLOP (2) CHECK ";
 								cin >> action;
 							}
 						}
@@ -461,14 +461,29 @@ class PokerGame
 					{
 						if (players[player_index].round && players[player_index].goodToGo == 0)
 						{
-							cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
-							cin >> action;
-							while (action != FLOP && action != BET_or_CALL)
+							// Player has money and it's more or equal to current bet on the table
+							if (players[player_index].money != 0 && players[player_index].money >= betOn)
 							{
-								cout << "Invalid number pressed." << endl;
-								cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
+								cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 								cin >> action;
-								cout << endl << endl;
+								while (action != FLOP && action != BET_or_CALL)
+								{
+									cout << "Invalid number pressed." << endl;
+									cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
+									cin >> action;
+								}
+							}
+							// Else player can only pass
+							else
+							{
+								cout << "\t\t\t\t\tYour action: (1) FLOP ";
+								cin >> action;
+								while (action != FLOP)
+								{
+									cout << "Invalid number pressed." << endl;
+									cout << "\t\t\t\t\tYour action: (1) FLOP ";
+									cin >> action;
+								}
 							}
 							if (action == FLOP)
 							{
@@ -481,7 +496,7 @@ class PokerGame
 								players[player_index].money -= betOn;
 								players[player_index].goodToGo = 1;
 
-								cout << "\t+ " << players[player_index].name << " bets " << betOn << "$\n";
+								cout << "\t++ " << players[player_index].name << " calls!" << endl;
 							}
 						}
 					}
