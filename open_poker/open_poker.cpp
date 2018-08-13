@@ -852,6 +852,7 @@ class PokerGame
 				{
 					winner = getWinner();
 					std::cout << players[winner].name << " wins $" << pot << "\n\n";
+					players[winner].money += pot;
 					i++;
 					continue;
 				}
@@ -866,6 +867,7 @@ class PokerGame
 				{
 					winner = getWinner();
 					std::cout << players[winner].name << " wins $" << pot << "\n\n";
+					players[winner].money += pot;
 					i++;
 					continue;
 				}
