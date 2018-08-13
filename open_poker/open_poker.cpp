@@ -305,7 +305,7 @@ class PokerGame
 				{
 					if (betOn)
 					{
-						cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL ";
+						cout << "\t\t\t\t\tYour action: (1) FLOP (3) BET/CALL";
 						cin >> action;
 						while (action != FLOP && action != BET_or_CALL)
 						{
@@ -340,9 +340,10 @@ class PokerGame
 						continue;
 					}
 					else
-					{
+					{	
 						if (betOn)
 						{
+							cout << "betOn: " << betOn << endl;
 							pot += betOn;
 							players[4].money -= betOn;
 							players[4].goodToGo = 1;
@@ -350,8 +351,10 @@ class PokerGame
 						}
 						else
 						{
+							cout << "Player money: " << players[4].money << endl;
 							cout << "How much do you want to bet: ";
 							cin >> bet;
+						
 							while (bet > players[4].money || bet < 1)
 							{
 								cout << "Invalid number to bet." << endl;
@@ -359,6 +362,7 @@ class PokerGame
 								cin >> bet;
 								cout << endl << endl;
 							}
+						
 							pot += bet;
 							players[4].money -= bet;
 							betOn = bet;
