@@ -378,7 +378,6 @@ class PokerGame
 					{	
 						if (betOn)
 						{
-							cout << "betOn: " << betOn << endl;
 							pot += betOn;
 							players[player_index].money -= betOn;
 							players[player_index].goodToGo = 1;
@@ -386,7 +385,6 @@ class PokerGame
 						}
 						else
 						{
-							cout << "Player money: " << players[4].money << endl;
 							cout << "How much do you want to bet: ";
 							cin >> bet;
 
@@ -417,24 +415,18 @@ class PokerGame
 					rational = rand() % 2;
 					if (rational)
 					{
-						cout << players[k % players_count].name << " is rational" << endl;
 						action = computerAction(k % players_count) + 1;
 						while (players[k % players_count].money < betOn && action != FLOP)
 						{
 							action = (rand() % 3) + 1;
-							cout << players[k % players_count].name << "'s action: " << action << endl;
 						}
-						cout << players[k % players_count].name << "'s action: " << action << endl;
-						
 					}
 					else
 					{
-						cout << players[k % players_count].name << " is not rational" << endl;
 						action = (rand() % 3) + 1;
 						while (players[k % players_count].money < betOn && action != FLOP)
 						{
 							action = (rand() % 3) + 1;
-							//cout << players[k % players_count].name << "'s action: " << action << endl;
 						}
 					}
 					if (action == FLOP)
@@ -528,12 +520,10 @@ class PokerGame
 							continue;
 						// Action range 1-3: FLOP = 1, CHECK = 2, CALL = 3
 						action = (rand() % 3) + 1;
-						cout << players[k % players_count].name << "'s action: " << action << endl;
 						// Do not let computer to CHECK or bet if it doesn't have enough of money
-						while (action == CHECK || players[k % players_count].money < betOn)
+						while (action == CHECK || (action == BET_or_CALL && players[k % players_count].money < betOn))
 						{
 							action = (rand() % 3) + 1;
-							//cout << players[k % players_count].name << "'s action: " << action << endl;
 						}
 						if (action == FLOP)
 						{
@@ -838,6 +828,7 @@ class PokerGame
 				{
 					winner = getWinner();
 					std::cout << players[winner].name << " wins $" << pot << "\n\n";
+					players[winner].money += pot;
 					i++;
 					continue;
 				}
