@@ -243,8 +243,8 @@ class PokerGame
 		Deck deck1;
 		int bind;
 		Card tableCards[5];
-		int pot, action, bet, betOn_after_raise, rational, betOn, winner, maxPoints, roundWinner;
-		enum poker_action {FLOP = 1, CHECK = 2, BET_or_CALL = 3, RAISE = 4};
+		int pot, action, bet, rational, betOn, winner, maxPoints, roundWinner;
+		enum poker_action {FLOP = 1, CHECK = 2, BET_or_CALL = 3};
 		int handPoints[6];
 		int bestHand[6][3];
 
@@ -305,33 +305,19 @@ class PokerGame
 				/* human player actions */
 				if (k % players_count == player_index && players[player_index].round)
 				{
-					// Player can FLOP, CALL or RAISE
+					// Player can FLOP or CALL
 					if (betOn)
 					{
 						// Player has money and it's more or equal to current bet on the table
 						if (players[player_index].money != 0 && players[player_index].money >= betOn)
 						{
-							if (players[player_index].money > betOn)
+							cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
+							cin >> action;
+							while (action != FLOP && action != BET_or_CALL)
 							{
-								cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL (4) RAISE ";
-								cin >> action;
-								while (action == CHECK)
-								{
-									cout << "Invalid number pressed." << endl;
-									cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL (4) RAISE ";
-									cin >> action;
-								}
-							}
-							else 
-							{
+								cout << "Invalid number pressed." << endl;
 								cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 								cin >> action;
-								while (action != FLOP && action != BET_or_CALL)
-								{
-									cout << "Invalid number pressed." << endl;
-									cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
-									cin >> action;
-								}
 							}
 						}
 						// Else player can only pass
@@ -394,7 +380,7 @@ class PokerGame
 								pot += betOn;
 								players[player_index].money -= betOn;
 								players[player_index].goodToGo = 1;
-								cout << "\t++ " << players[player_index].name << " calls! (" << betOn << "$)" << endl;
+								cout << "\t++ " << players[player_index].name << " calls!" << endl;
 							}
 							else
 							{
@@ -417,26 +403,6 @@ class PokerGame
 								cout << "\t+ " << players[player_index].name << " bets " << bet << "$\n";
 							}
 							break;
-						case RAISE:
-							cout << "How much do you want to raise: ";
-							cin >> bet;
-
-							while (betOn + bet > players[player_index].money || bet < 1)
-							{
-								cout << "Invalid number to raise." << endl;
-								cout << "How much do you want to raise: ";
-								cin >> bet;
-								cout << endl << endl;
-							}
-							
-							betOn += bet;
-							betOn_after_raise = betOn;
-							pot += betOn;
-							players[player_index].money -= betOn;
-							players[player_index].goodToGo = 1;
-							
-							cout << "\t+ " << players[player_index].name << " raises bet to " << betOn << "$\n";
-							break;
 					}
 				}
 				/* computers actions */
@@ -452,7 +418,6 @@ class PokerGame
 					if (rational)
 					{
 						action = computerAction(k % players_count) + 1;
-						// Computer plays rational, not going to choose RAISE
 						if (players[k % players_count].money < betOn)
 							action = FLOP;
 						while (betOn && action == CHECK)
@@ -461,14 +426,14 @@ class PokerGame
 					// Computer is not rational
 					else
 					{
-						// Choose from range 1-4, FLOP = 1, CHECK = 2, BET/CALL = 3, RAISE = 4
-						action = (rand() % 4) + 1;
+						// Choose from range 1-3, FLOP = 1, CHECK = 2, BET/CALL = 3
+						action = (rand() % 3) + 1;
 						
 						// Computer can only flop if it doesn't have enough money
 						if (betOn && players[k % players_count].money < betOn)
 							action = FLOP;
 						while (betOn != 0 && action == CHECK)
-							action = (rand() % 4) + 1; // Computer cannot CHECK if bet is on
+							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
 					}
 					// Handle computer's action
 					switch (action)
@@ -486,7 +451,7 @@ class PokerGame
 							{
 								pot += betOn;
 								players[k % players_count].money -= betOn;
-								cout << "\t++ " << players[k % players_count].name << " calls! (" << betOn << "$)" << endl;
+								cout << "\t++ " << players[k % players_count].name << " calls!" << endl;
 								players[k % players_count].goodToGo = 1;
 							}
 							else
@@ -499,26 +464,6 @@ class PokerGame
 								betOn = bet;
 								players[k % players_count].goodToGo = 1;
 							}
-							break;
-						case RAISE:
-							cout << "How much do you want to raise: ";
-							cin >> bet;
-
-							while (betOn + bet > players[k % players_count].money || bet < 1)
-							{
-								cout << "Invalid number to raise." << endl;
-								cout << "How much do you want to raise: ";
-								cin >> bet;
-								cout << endl << endl;
-							}
-							
-							betOn += bet;
-							betOn_after_raise = betOn;
-							pot += betOn;
-							players[k % players_count].money -= betOn;
-							players[k % players_count].goodToGo = 1;
-							
-							cout << "\t+ " << players[k % players_count].name << " raises bet to " << betOn << "$\n";
 							break;
 					}
 					_sleep(1);
@@ -537,30 +482,16 @@ class PokerGame
 							// Player has money and it's more or equal to current bet on the table
 							if (players[player_index].money != 0 && players[player_index].money >= betOn)
 							{
-								// If player has more money than current bet on, he or she may raise
-								if (players[player_index].money > betOn)
+								
+								cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
+								cin >> action;
+								while (action != FLOP && action != BET_or_CALL)
 								{
-									cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL (4) RAISE ";
-									cin >> action;
-									while (action == CHECK)
-									{
-										cout << "Invalid number pressed." << endl;
-										cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL (4) RAISE ";
-										cin >> action;
-									}
-								}
-								// Otherwise player can either flop or call in
-								else 
-								{
+									cout << "Invalid number pressed." << endl;
 									cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 									cin >> action;
-									while (action != FLOP && action != BET_or_CALL)
-									{
-										cout << "Invalid number pressed." << endl;
-										cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
-										cin >> action;
-									}
 								}
+								
 							}
 							// Else player can only pass
 							else
@@ -585,27 +516,7 @@ class PokerGame
 									pot += betOn;
 									players[player_index].money -= betOn;
 									players[player_index].goodToGo = 1;
-									cout << "\t++ " << players[player_index].name << " calls! (" << betOn << "$)" << endl;
-									break;
-								case RAISE:
-									cout << "How much do you want to raise: ";
-									cin >> bet;
-
-									while (betOn + bet > players[player_index].money || bet < 1)
-									{
-										cout << "Invalid number to raise." << endl;
-										cout << "How much do you want to raise: ";
-										cin >> bet;
-										cout << endl << endl;
-									}
-									
-									betOn += bet;
-									betOn_after_raise = betOn;
-									pot += betOn;
-									players[player_index].money -= betOn;
-									players[player_index].goodToGo = 1;
-									
-									cout << "\t+ " << players[player_index].name << " raises bet to " << betOn << "$\n";
+									cout << "\t++ " << players[player_index].name << " calls!" << endl;
 									break;
 							}
 						}
@@ -616,14 +527,15 @@ class PokerGame
 					{
 						if (players[k % players_count].round == 0 || players[k % players_count].goodToGo == 1)
 							continue;
-						// Choose from range 1-4, FLOP = 1, CHECK = 2, BET/CALL = 3, RAISE = 4
+						// Choose from range 1-3, FLOP = 1 BET/CALL = 3
 						action = (rand() % 3) + 1;
 						
-						// Do not let computer to BET or RAISE if it doesn't have enough of money
-						if (((action == BET_or_CALL || action == RAISE) && players[k % players_count].money < betOn))
-						{	
+						while (action == CHECK)
+							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
+							
+						// Do not let computer to BET if it doesn't have enough of money
+						if (action == BET_or_CALL && players[k % players_count].money < betOn)
 							action = FLOP; // Computer has no other option other than to FLOP
-						}
 
 						// Handle computer's action
 						switch (action)
@@ -632,48 +544,11 @@ class PokerGame
 								players[k % players_count].round = 0;
 								cout << "\t- " << players[k % players_count].name << " flops..." << endl;
 								break;
-							case CHECK:
-								cout << "\t+ " << players[k % players_count].name << " checks." << endl;
-								continue; // continue to next loop iteration
-								break;
 							case BET_or_CALL:
-								if (betOn)
-								{
-									pot += betOn;
-									players[k % players_count].money -= betOn;
-									cout << "\t++ " << players[k % players_count].name << " calls! (" << betOn << "$)" << endl;
-									players[k % players_count].goodToGo = 1;
-								}
-								else
-								{
-									bet = (rand() % (players[k % players_count].money / 3) + 10);
-									pot += bet;
-									players[k % players_count].money -= bet;
-									cout << '\a';
-									cout << "\t+ " << players[k % players_count].name << " bets " << bet << "$" << endl;
-									betOn = bet;
-									players[k % players_count].goodToGo = 1;
-								}
-								break;
-							case RAISE:
-								cout << "How much do you want to raise: ";
-								cin >> bet;
-
-								while (betOn + bet > players[k % players_count].money || bet < 1)
-								{
-									cout << "Invalid number to raise." << endl;
-									cout << "How much do you want to raise: ";
-									cin >> bet;
-									cout << endl << endl;
-								}
-								
-								betOn += bet;
-								betOn_after_raise = betOn;
 								pot += betOn;
 								players[k % players_count].money -= betOn;
+								cout << "\t++ " << players[k % players_count].name << " calls!" << endl;
 								players[k % players_count].goodToGo = 1;
-								
-								cout << "\t+ " << players[k % players_count].name << " raises bet to " << betOn << "$\n";
 								break;
 						}
 					}
