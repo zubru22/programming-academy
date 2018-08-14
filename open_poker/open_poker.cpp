@@ -289,6 +289,92 @@ class PokerGame
 
 			return false;
 		}
+		
+		// Handles bets from human player
+		void human_bet(int current_player)
+		{
+			using std::cout;
+			using std::cin;
+			using std::endl;
+			
+			cout << "How much do you want to bet: ";
+			cin >> bet;
+
+			while (bet > players[current_player].money || bet < 1)
+			{
+				cout << "Invalid number to bet." << endl;
+				cout << "How much do you want to bet: ";
+				cin >> bet;
+				cout << endl << endl;
+			}
+		
+			pot += bet;
+			players[current_player].money -= bet;
+			betOn = bet;
+			players[current_player].goodToGo = 1;
+
+			cout << "\t+ " << players[current_player].name << " bets " << bet << "$\n";
+		}
+		
+		// Handles bets from computer players
+		void computer_bet(int current_player)
+		{
+			using std::cout;
+			using std::cin;
+			using std::endl;
+			
+			bet = (rand() % (players[current_player].money / 3) + 10);
+			pot += bet;
+			players[current_player].money -= bet;
+			cout << '\a';
+			cout << "\t+ " << players[current_player].name << " bets " << bet << "$" << endl;
+			betOn = bet;
+			players[current_player].goodToGo = 1;
+		}
+		
+		// Handle player's action
+		void handle_action(int action, int current_player)
+		{
+			using std::cout;
+			using std::cin;
+			using std::endl;
+			
+			bool human;
+			// Check if player is human or computer player
+			if (current_player == player_index)
+				human = true;
+			else
+				human = false;
+			
+			switch (action)
+			{
+				case FLOP:
+					players[current_player].round = 0;
+					cout << "\t- " << players[current_player].name << " flops...\n";
+					break;
+				case CHECK:
+					cout << "\t+ " << players[current_player].name << " checks.\n";
+					break;
+				case BET_or_CALL:
+					if (betOn)
+					{
+						pot += betOn;
+						players[current_player].money -= betOn;
+						players[current_player].goodToGo = 1;
+						cout << "\t++ " << players[current_player].name << " calls!" << endl;
+					}
+					else
+					{
+						// If current player is human player prompt user for bet
+						if (human)
+							human_bet(current_player);
+						// Else get random bet from computer
+						else
+							computer_bet(current_player);
+					}
+					break;
+			}
+		}
 
 		void takeBets()
 		{
@@ -367,46 +453,7 @@ class PokerGame
 					cout << endl;
 					
 					// Handle player's action
-					switch (action)
-					{
-						case FLOP:
-							players[player_index].round = 0;
-							cout << "\t- " << players[player_index].name << " flops...\n";
-							break;
-						case CHECK:
-							cout << "\t+ " << players[player_index].name << " checks.\n";
-							continue; // continue to next loop iteration
-							break;
-						case BET_or_CALL:
-							if (betOn)
-							{
-								pot += betOn;
-								players[player_index].money -= betOn;
-								players[player_index].goodToGo = 1;
-								cout << "\t++ " << players[player_index].name << " calls!" << endl;
-							}
-							else
-							{
-								cout << "How much do you want to bet: ";
-								cin >> bet;
-
-								while (bet > players[player_index].money || bet < 1)
-								{
-									cout << "Invalid number to bet." << endl;
-									cout << "How much do you want to bet: ";
-									cin >> bet;
-									cout << endl << endl;
-								}
-							
-								pot += bet;
-								players[player_index].money -= bet;
-								betOn = bet;
-								players[player_index].goodToGo = 1;
-
-								cout << "\t+ " << players[player_index].name << " bets " << bet << "$\n";
-							}
-							break;
-					}
+					handle_action(action, player_index);
 				}
 				/* computers actions */
 				else
@@ -439,36 +486,7 @@ class PokerGame
 							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
 					}
 					// Handle computer's action
-					switch (action)
-					{
-						case FLOP:
-							players[current_player].round = 0;
-							cout << "\t- " << players[current_player].name << " flops..." << endl;
-							break;
-						case CHECK:
-							cout << "\t+ " << players[current_player].name << " checks." << endl;
-							continue; // continue to next loop iteration
-							break;
-						case BET_or_CALL:
-							if (betOn)
-							{
-								pot += betOn;
-								players[current_player].money -= betOn;
-								cout << "\t++ " << players[current_player].name << " calls!" << endl;
-								players[current_player].goodToGo = 1;
-							}
-							else
-							{
-								bet = (rand() % (players[current_player].money / 3) + 10);
-								pot += bet;
-								players[current_player].money -= bet;
-								cout << '\a';
-								cout << "\t+ " << players[current_player].name << " bets " << bet << "$" << endl;
-								betOn = bet;
-								players[current_player].goodToGo = 1;
-							}
-							break;
-					}
+					handle_action(action, current_player);
 					_sleep(1);
 				}
 			}
@@ -509,19 +527,7 @@ class PokerGame
 								}
 							}
 							// Handle player's action
-							switch (action)
-							{
-								case FLOP:
-									players[player_index].round = 0;
-									cout << "\t- " << players[player_index].name << " flops...\n";
-									break;
-								case BET_or_CALL:
-									pot += betOn;
-									players[player_index].money -= betOn;
-									players[player_index].goodToGo = 1;
-									cout << "\t++ " << players[player_index].name << " calls!" << endl;
-									break;
-							}
+							handle_action(action, player_index);
 						}
 					}
 					
@@ -541,19 +547,7 @@ class PokerGame
 							action = FLOP; // Computer has no other option other than to FLOP
 
 						// Handle computer's action
-						switch (action)
-						{
-							case FLOP:
-								players[current_player].round = 0;
-								cout << "\t- " << players[current_player].name << " flops..." << endl;
-								break;
-							case BET_or_CALL:
-								pot += betOn;
-								players[current_player].money -= betOn;
-								cout << "\t++ " << players[current_player].name << " calls!" << endl;
-								players[current_player].goodToGo = 1;
-								break;
-						}
+						handle_action(action, current_player);
 					}
 				}
 			}
