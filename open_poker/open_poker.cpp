@@ -296,14 +296,17 @@ class PokerGame
 			using std::cin;
 			using std::endl;
 
+			int current_player;
+
 			betOn = 0;
 			for (int k = 0; k < players_count; k++)
 				players[k].goodToGo = 0;
 
 			for (int k = bind + 1; k < bind + 7; k++)
 			{
+				current_player = k % players_count;
 				/* human player actions */
-				if (k % players_count == player_index && players[player_index].round)
+				if (current_player == player_index && players[player_index].round)
 				{
 					// Player can FLOP or CALL
 					if (betOn)
@@ -408,7 +411,7 @@ class PokerGame
 				/* computers actions */
 				else
 				{
-					if (players[k % players_count].round == 0)
+					if (players[current_player].round == 0)
 						continue;
 					
 					// 0 - not rational, 1 - rational
@@ -417,8 +420,8 @@ class PokerGame
 					// Computer is rational
 					if (rational)
 					{
-						action = computerAction(k % players_count) + 1;
-						if (players[k % players_count].money < betOn)
+						action = computerAction(current_player) + 1;
+						if (players[current_player].money < betOn)
 							action = FLOP;
 						while (betOn && action == CHECK)
 							action = (rand() % 3) + 1;
@@ -430,7 +433,7 @@ class PokerGame
 						action = (rand() % 3) + 1;
 						
 						// Computer can only flop if it doesn't have enough money
-						if (betOn && players[k % players_count].money < betOn)
+						if (betOn && players[current_player].money < betOn)
 							action = FLOP;
 						while (betOn != 0 && action == CHECK)
 							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
@@ -439,30 +442,30 @@ class PokerGame
 					switch (action)
 					{
 						case FLOP:
-							players[k % players_count].round = 0;
-							cout << "\t- " << players[k % players_count].name << " flops..." << endl;
+							players[current_player].round = 0;
+							cout << "\t- " << players[current_player].name << " flops..." << endl;
 							break;
 						case CHECK:
-							cout << "\t+ " << players[k % players_count].name << " checks." << endl;
+							cout << "\t+ " << players[current_player].name << " checks." << endl;
 							continue; // continue to next loop iteration
 							break;
 						case BET_or_CALL:
 							if (betOn)
 							{
 								pot += betOn;
-								players[k % players_count].money -= betOn;
-								cout << "\t++ " << players[k % players_count].name << " calls!" << endl;
-								players[k % players_count].goodToGo = 1;
+								players[current_player].money -= betOn;
+								cout << "\t++ " << players[current_player].name << " calls!" << endl;
+								players[current_player].goodToGo = 1;
 							}
 							else
 							{
-								bet = (rand() % (players[k % players_count].money / 3) + 10);
+								bet = (rand() % (players[current_player].money / 3) + 10);
 								pot += bet;
-								players[k % players_count].money -= bet;
+								players[current_player].money -= bet;
 								cout << '\a';
-								cout << "\t+ " << players[k % players_count].name << " bets " << bet << "$" << endl;
+								cout << "\t+ " << players[current_player].name << " bets " << bet << "$" << endl;
 								betOn = bet;
-								players[k % players_count].goodToGo = 1;
+								players[current_player].goodToGo = 1;
 							}
 							break;
 					}
@@ -475,7 +478,7 @@ class PokerGame
 				for (int k = bind + 1; k < bind + 7; k++)
 				{
 					// Player's action
-					if (k % players_count == player_index)
+					if (current_player == player_index)
 					{
 						if (players[player_index].round && players[player_index].goodToGo == 0)
 						{
@@ -525,7 +528,7 @@ class PokerGame
 					// Computer's action
 					else
 					{
-						if (players[k % players_count].round == 0 || players[k % players_count].goodToGo == 1)
+						if (players[current_player].round == 0 || players[current_player].goodToGo == 1)
 							continue;
 						// Choose from range 1-3, FLOP = 1 BET/CALL = 3
 						action = (rand() % 3) + 1;
@@ -534,21 +537,21 @@ class PokerGame
 							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
 							
 						// Do not let computer to BET if it doesn't have enough of money
-						if (action == BET_or_CALL && players[k % players_count].money < betOn)
+						if (action == BET_or_CALL && players[current_player].money < betOn)
 							action = FLOP; // Computer has no other option other than to FLOP
 
 						// Handle computer's action
 						switch (action)
 						{
 							case FLOP:
-								players[k % players_count].round = 0;
-								cout << "\t- " << players[k % players_count].name << " flops..." << endl;
+								players[current_player].round = 0;
+								cout << "\t- " << players[current_player].name << " flops..." << endl;
 								break;
 							case BET_or_CALL:
 								pot += betOn;
-								players[k % players_count].money -= betOn;
-								cout << "\t++ " << players[k % players_count].name << " calls!" << endl;
-								players[k % players_count].goodToGo = 1;
+								players[current_player].money -= betOn;
+								cout << "\t++ " << players[current_player].name << " calls!" << endl;
+								players[current_player].goodToGo = 1;
 								break;
 						}
 					}
