@@ -94,9 +94,7 @@ class Deck
 			std::cout << "Printing the deck..." << std::endl;
 			_sleep(1);
 			for (int i = 0; i < card_tally; i++)
-			{
 				std::cout << ranks[cards[i].rank] << suits[cards[i].suit] << std::endl;
-			}
 			printf("\n");
 		}
 
@@ -167,15 +165,10 @@ class PokerGame
 		void deal()
 		{
 			for (int i = 0; i < players_count; i++)
-			{
 				for (int j = 0; j < 2; j++)
-				{
 					if (players[i].playing)
-					{
 						players[i].cards[j] = deck1.hitme();
-					}
-				}
-			}
+						
 			for (int i = 0; i < 5; i++)
 				tableCards[i].rank = -1;
 		}
@@ -275,9 +268,7 @@ class PokerGame
 					return 2;
 			}
 			else
-			{
 				return 2;
-			}
 		}
 
 		/*checks if someone still got bet/call*/
@@ -431,7 +422,6 @@ class PokerGame
 								cin >> action;
 							}
 						}
-						
 					}
 					// Else player can bet, check or flop.
 					else
@@ -512,8 +502,7 @@ class PokerGame
 						{
 							// Player has money and it's more or equal to current bet on the table
 							if (players[player_index].money != 0 && players[player_index].money >= betOn)
-							{
-								
+							{		
 								cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 								cin >> action;
 								while (action != FLOP && action != BET_or_CALL)
@@ -521,8 +510,7 @@ class PokerGame
 									cout << "Invalid number pressed." << endl;
 									cout << "\t\t\t\t\tYour action: (1) FLOP (3) CALL ";
 									cin >> action;
-								}
-								
+								}	
 							}
 							// Else player can only pass
 							else
@@ -540,7 +528,6 @@ class PokerGame
 							handle_action(action, player_index);
 						}
 					}
-					
 					// Computer's action
 					else
 					{
@@ -733,7 +720,6 @@ class PokerGame
 							}
 						}
 					}
-
 				}
 			}
 		} /*end of evaluateHands() */
@@ -804,19 +790,17 @@ class PokerGame
 						players[z].playing = 0;
 						players[z].round = 0;
 					}
+				
 				for (int z = 0; z < players_count; z++)
 				{
 					if (players[z].playing)
 						players[z].round = 1;
 					handPoints[z] = -1;
 				}
+
 				for (int x = 0; x < players_count; x++)
-				{
 					for (int y = 0; y<3; y++)
-					{
 						bestHand[x][y] = -1;
-					}
-				}
 
 				/* checking for game over*/
 				if (players[player_index].playing == 0)
