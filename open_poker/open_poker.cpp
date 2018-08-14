@@ -290,6 +290,16 @@ class PokerGame
 			return false;
 		}
 		
+		// Computer random action
+		int computer_random(int options)
+		{
+			/* Options argument describe range from zero to given value
+			 * eg options = 3 -> values from range 0-2, +1 makes it human friendly
+			 * so range becomes 1-3 */
+			int chosen_option = (rand() % options) + 1;
+			return chosen_option;
+		}
+		
 		// Handles bets from human player
 		void human_bet(int current_player)
 		{
@@ -471,19 +481,19 @@ class PokerGame
 						if (players[current_player].money < betOn)
 							action = FLOP;
 						while (betOn && action == CHECK)
-							action = (rand() % 3) + 1;
+							action = computer_random(3);
 					}
 					// Computer is not rational
 					else
 					{
 						// Choose from range 1-3, FLOP = 1, CHECK = 2, BET/CALL = 3
-						action = (rand() % 3) + 1;
+						action = computer_random(3);
 						
 						// Computer can only flop if it doesn't have enough money
 						if (betOn && players[current_player].money < betOn)
 							action = FLOP;
 						while (betOn != 0 && action == CHECK)
-							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
+							action = computer_random(3); // Computer cannot CHECK if bet is on
 					}
 					// Handle computer's action
 					handle_action(action, current_player);
@@ -537,10 +547,10 @@ class PokerGame
 						if (players[current_player].round == 0 || players[current_player].goodToGo == 1)
 							continue;
 						// Choose from range 1-3, FLOP = 1 BET/CALL = 3
-						action = (rand() % 3) + 1;
+						action = computer_random(3);
 						
 						while (action == CHECK)
-							action = (rand() % 3) + 1; // Computer cannot CHECK if bet is on
+							action = computer_random(3); // Computer cannot CHECK if bet is on
 							
 						// Do not let computer to BET if it doesn't have enough of money
 						if (action == BET_or_CALL && players[current_player].money < betOn)
