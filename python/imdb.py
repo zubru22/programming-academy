@@ -1,7 +1,6 @@
 import omdb
 from datetime import datetime
 omdb.set_default('apikey', '68f39148')
-# movie = omdb.get(title='Guardians of the Galaxy Vol. 2')
 
 
 def get_movie(movie):
