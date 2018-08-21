@@ -1,3 +1,6 @@
+import re
+
+
 def remove_chars(sentence):
     # Return sentence without first and last character
     return sentence[1:-1]
@@ -120,5 +123,84 @@ def reorder_substrings(sentence):
     # Return sorted list as string
     return ' '.join(sentence_sorted)
 
-assert reorder_substrings("is2 Thi1s T4est 3a") == "Thi1s is2 3a T4est", "Failed!"
+#assert reorder_substrings("is2 Thi1s T4est 3a") == "Thi1s is2 3a T4est", "Failed!"
+
+def create_dictionary():
+    names = {"Michal": 0, "Marcin": 1, "Ryszard": 2}
+    print(names)
+    names.pop("Ryszard", None);
+    print(names)
+    if "Edyta" in names:
+        names["Edyta"] += 3
+    else:
+        names["Edyta"] = 3
+    print(names)
+
+# create_dictionary()
+
+# Write a Python program to count the occurrences of each word in a given sentence.
+def word_counter(sentence):
+    words = {}
+    sentence = sentence.split(" ")
+    for word in sentence:
+        if word not in words:
+            words[word] = sentence.count(word)
+
+    print(words)
+    return words
+
+
+answer = {"Ala": 2, "ma": 2, "kota.": 1, "psa.": 1}
+# assert word_counter("Ala ma kota. Ala ma psa.") == answer
+
+# Write a Python program to count the occurrences of each word in a given sentence.
+def word_counter_2(sentence):
+    words = {}
+    sentence = list(sentence)
+    string = ""
+
+    for letter in sentence:
+        if letter.isalnum() or letter.isspace():
+            string += letter
+        else:
+            string += " " + letter
+
+    string = string.split(" ")
+    for word in string:
+        if word not in words:
+            words[word] = string.count(word)
+
+    return words
+
+# answer = {"Ala": 2, "ma": 2, "kota": 1, "psa": 1, ".": 2}
+# assert word_counter_2("Ala ma kota. Ala ma psa.") == answer
+
+
+def validatePIN(PIN):
+    # ATM machines allow 4 digit PIN codes and PIN must contain only digits.
+    # Validate if input is correct
+    if len(PIN) == 4 and re.match(r"\d{4}", PIN):
+        return True
+    return False
+
+
+# assert validatePIN("1234") == True, "Wrong validation!"
+# assert validatePIN("12345") == False, "Wrong validation!"
+# assert validatePIN("a234") == False, "Wrong validation!"
+
+
+def validate_input(word):
+    # Write a simple regex to validate a username. Allowed characters are:
+    # lowercase letters, numbers, underscore
+    # Length should be between 5 and 20 characters (both included).
+    pattern = re.compile(r'[0-9_a-z]{5,20}')
+
+    if re.match(pattern, word) is None:
+        return False
+    else:
+        return True
+
+# assert validate_input("Summer Academmy") == False, "Bad validation!"
+# assert validate_input("Summer_Academmy") == False, "Bad validation!"
+# assert validate_input("summer_academmy") == True, "Bad validation!"
 
